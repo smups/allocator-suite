@@ -112,13 +112,11 @@ impl NumaSettings {
     ) -> isize {
         let result: isize;
         unsafe {
-            llvm_asm!(
-                    "syscall"
-            : "={rax}"(result)
-            : "{rax}"(SYS_mbind), "{rdi}"(start), "{rsi}"(len), "{rdx}"(mode), "{r10}"(nodemask), "{r8}"(maxnode), "{r9}"(flags)
-            : "rcx", "r11", "memory"
-            : "volatile"
-            )
+            #[cfg(target_arch = "x86_64")]
+            compile_error!("Not yet implemented!");
+
+            #[cfg(not(any(target_arch = "x86_64", target_arch="arm")))]
+            compile_error!("No assembly available for this target");
         }
         result
     }
