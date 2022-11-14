@@ -1,7 +1,7 @@
 use crate::allocators::allocator::Allocator;
 use crate::memory_address::MemoryAddress;
 use core::ptr::NonNull;
-use std::alloc::{AllocError, AllocRef, GlobalAlloc, Layout};
+use std::alloc::{AllocError, GlobalAlloc, Layout};
 use std::ops::Deref;
 
 use std::num::NonZeroUsize;
@@ -39,20 +39,6 @@ unsafe impl<'a, A: 'a + Allocator> GlobalAlloc for AllocatorAdaptor<'a, A> {
     #[inline(always)]
     unsafe fn realloc(&self, ptr: *mut u8, layout: Layout, new_size: usize) -> *mut u8 {
         self.global_alloc_realloc(ptr, layout, new_size)
-    }
-}
-
-unsafe impl<'a, A: 'a + Allocator> AllocRef for AllocatorAdaptor<'a, A> {
-    #[inline(always)]
-    fn alloc(&self, layout: Layout) -> Result<NonNull<[u8]>, AllocError> {
-        let size = layout.size();
-        let ptr = unsafe { self.alloc_alloc_zeroed(layout) }?;
-        Ok(NonNull::slice_from_raw_parts(ptr, size))
-    }
-
-    #[inline(always)]
-    unsafe fn dealloc(&self, ptr: MemoryAddress, layout: Layout) {
-        self.alloc_dealloc(ptr, layout)
     }
 }
 
