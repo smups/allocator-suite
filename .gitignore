@@ -19,3 +19,10 @@ bcs
 
 # Intellij stuff
 .idea/
+
+#Library consumers should set toolchain themselves, but I like using cargo build
+#instead of cargo build +nightly, which is what the toolchain file does
+rust-toolchain.toml
+
+# VScode stuff
+.vscode/
